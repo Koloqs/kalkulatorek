@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="Pl-pl" class="w-full h-full bg-amber-200">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="output.css" rel="stylesheet">
+</head>
+<body class="flex justify-center items-center h-screen w-screen">
+    <section class="h-120 width-100">
+        <section class="h-50 w-82.5 bg-white overflow-hidden flex items-center justify-start"   >
+            <p class="mr-4 size-15 text-6xl"></p>
+        </section>
+            <section class="h-70 w-60.5 bg-gray-700 float-left"   >
+                <table class="w-full h-full">
+                    <tr>
+                        <td class="text-center text-white font-bold text-xl">7</td>
+                        <td class="text-center text-white font-bold text-xl">8</td>
+                        <td class="text-center text-white font-bold text-xl">9</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center text-white font-bold text-xl">4</td>
+                        <td class="text-center text-white font-bold text-xl">5</td>
+                        <td class="text-center text-white font-bold text-xl">6</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center text-white font-bold text-xl">1</td>
+                        <td class="text-center text-white font-bold text-xl">2</td>
+                        <td class="text-center text-white font-bold text-xl">3</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center text-white font-bold text-xl">0</td>
+                        <td class="text-center text-white font-bold text-xl">.</td>
+                        <td class="text-center text-white font-bold text-xl">=</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td class="w-22 h-17.5 text-center font-bold text-xl"></td>
+                        <td class="w-22 h-17.5 text-center font-bold text-xl"></td>
+                        <td class="w-22 h-17.5 text-center font-bold text-xl bg-amber-500">C</td>
+                    </tr>
+                </table>
+            </section>
+        <section class="h-87.5 w-22 bg-amber-500 float-left flex justify-center">
+            <table>
+                <tr>
+                    <td class="w-22 h-17.5 text-center font-bold text-xl">÷</td>
+                </tr>
+                <tr>
+                    <td class="w-22 h-17.5 text-center font-bold text-xl">×</td>
+                </tr>
+                <tr>
+                    <td class="w-22 h-17.5 text-center font-bold text-xl">-</td>
+                </tr>
+                <tr>
+                    <td class="w-22 h-17.5 text-center font-bold text-xl">+</td>
+                </tr>
+                <tr>
+                    <td class="w-22 h-17.5 text-center font-bold text-xl">AC</td>
+            </table>
+        </section>   
+    </section>
+    
+    <script>
+        const display = document.querySelector('p');
+        
+        document.querySelectorAll('td').forEach(td => {
+            td.addEventListener('click', () => {
+                // jesli kliknieto znak 'AC' to czyszcze display i ustawiam domyślny rozmiar czcionki  
+                if(td.textContent === 'AC') {
+                    display.textContent = '';
+                    display.className = 'mr-4 size-15 text-6xl';
+                    return;
+                }// jesli kliknieto znak 'C' to usuwam ostatni znak z display
+                else if(td.textContent === 'C') {
+                    display.textContent = display.textContent.slice(0, -1);
+                }/* jesli kliknieto znak '=' to wyswietlam wynik wyswietlonego na
+                  display dzialania ale zamieniam x na '*' i ÷ na '/' aby pasowalo do wyazeni js */
+                else if(td.textContent === '=') {
+                    try     {
+                        let expression = display.textContent
+                            .replace(/×/g, '*')
+                            .replace(/÷/g, '/');
+                        
+                        let result = eval(expression);
+                        display.textContent = result.toString();
+                    } catch (error) {
+                        display.textContent = 'Error';
+                    }
+                }
+                //dodawanie tekstu do display
+                else{
+                display.textContent += td.textContent;
+                }
+
+                // zmniejsanie rozmiaru czcionki w zalezności od długości tekstu
+                
+                if (display.textContent.length > 15) {
+                    display.className = 'mr-4 size-15 text-2xl';
+                } else if (display.textContent.length > 12) {
+                    display.className = 'mr-4 size-15 text-3xl';
+                }
+                else if (display.textContent.length > 10) {
+                    display.className = 'mr-4 size-15 text-4xl';
+                }
+                else if (display.textContent.length > 8) {
+                    display.className = 'mr-4 size-15 text-4xl';
+                } else if (display.textContent.length > 5) {
+                    display.className = 'mr-4 size-15 text-5xl';
+                } else {
+                    display.className = 'mr-4 size-15 text-6xl';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
