@@ -1,48 +1,50 @@
 <!DOCTYPE html>
-<html lang="Pl-pl" class="w-full h-full bg-amber-200">
+<html lang="en" class="w-full h-full bg-amber-200">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="A modern web calculator built with HTML, CSS, and JavaScript">
+    <meta name="author" content="Koloqs">
+    <title>Kalkulatorek - Web Calculator</title>
     <link href="output.css" rel="stylesheet">
 </head>
-<body class="flex justify-center items-center h-screen w-screen">
-    <section class=" h-120 width-100">
-        <section class="h-50 w-82.5 bg-white overflow-hidden flex items-center justify-start"   >
-            <p class="mr-4 size-15 text-6xl"></p>
+<body class="flex justify-center items-center h-screen w-screen" role="main">
+    <section class="h-120 width-100" role="application" aria-label="Calculator">
+        <section class="h-50 w-82.5 bg-white overflow-hidden flex items-center justify-start" role="region" aria-label="Calculator display">
+            <p class="mr-4 size-15 text-6xl" role="textbox" aria-live="polite" aria-label="Calculator display" readonly></p>
         </section>
-            <section class="h-70 w-60.5 bg-gray-700 float-left"   >
-                <table class="w-full h-full">
-                    <tr>
-                        <td class="text-center text-white font-bold text-xl">7</td>
-                        <td class="text-center text-white font-bold text-xl">8</td>
-                        <td class="text-center text-white font-bold text-xl">9</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center text-white font-bold text-xl">4</td>
-                        <td class="text-center text-white font-bold text-xl">5</td>
-                        <td class="text-center text-white font-bold text-xl">6</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center text-white font-bold text-xl">1</td>
-                        <td class="text-center text-white font-bold text-xl">2</td>
-                        <td class="text-center text-white font-bold text-xl">3</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center text-white font-bold text-xl">0</td>
-                        <td class="text-center text-white font-bold text-xl">.</td>
-                        <td class="text-center text-white font-bold text-xl">=</td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <td class="w-22 h-17.5 text-center font-bold text-xl"></td>
-                        <td class="w-22 h-17.5 text-center font-bold text-xl"></td>
-                        <td class="w-22 h-17.5 text-center font-bold text-xl bg-amber-500">C</td>
-                    </tr>
-                </table>
-            </section>
-        <section class="h-87.5 w-22 bg-amber-500 float-left flex justify-center">
+        <section class="h-70 w-60.5 bg-gray-700 float-left" role="grid" aria-label="Number pad">
+            <table class="w-full h-full">
+                <tr>
+                    <td class="text-center text-white font-bold text-xl">7</td>
+                    <td class="text-center text-white font-bold text-xl">8</td>
+                    <td class="text-center text-white font-bold text-xl">9</td>
+                </tr>
+                <tr>
+                    <td class="text-center text-white font-bold text-xl">4</td>
+                    <td class="text-center text-white font-bold text-xl">5</td>
+                    <td class="text-center text-white font-bold text-xl">6</td>
+                </tr>
+                <tr>
+                    <td class="text-center text-white font-bold text-xl">1</td>
+                    <td class="text-center text-white font-bold text-xl">2</td>
+                    <td class="text-center text-white font-bold text-xl">3</td>
+                </tr>
+                <tr>
+                    <td class="text-center text-white font-bold text-xl">0</td>
+                    <td class="text-center text-white font-bold text-xl">.</td>
+                    <td class="text-center text-white font-bold text-xl">=</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td class="w-22 h-17.5 text-center font-bold text-xl"></td>
+                    <td class="w-22 h-17.5 text-center font-bold text-xl"></td>
+                    <td class="w-22 h-17.5 text-center font-bold text-xl bg-amber-500">C</td>
+                </tr>
+            </table>
+        </section>
+        <section class="h-87.5 w-22 bg-amber-500 float-left flex justify-center" role="grid" aria-label="Operator buttons">
             <table>
                 <tr>
                     <td class="w-22 h-17.5 text-center font-bold text-xl">÷</td>
@@ -58,58 +60,158 @@
                 </tr>
                 <tr>
                     <td class="w-22 h-17.5 text-center font-bold text-xl">AC</td>
+                </tr>
             </table>
         </section>   
     </section>
     
     <script>
-        const display = document.querySelector('p');
-        
-        document.querySelectorAll('td').forEach(td => {
-            td.addEventListener('click', () => {
-                // jesli kliknieto znak 'AC' to czyszcze display i ustawiam domyślny rozmiar czcionki  
+        document.addEventListener('DOMContentLoaded', function() {
+            const display = document.querySelector('p');
+            
+            // Safe math parser to replace eval()
+            function safeCalculate(expression) {
+                // Remove spaces and validate input
+                expression = expression.replace(/\s+/g, '');
+                
+                // Check if expression contains only allowed characters
+                if (!/^[0-9+\-*/().]+$/.test(expression)) {
+                    throw new Error('Invalid characters in expression');
+                }
+                
+                // Replace display symbols with JavaScript operators
+                expression = expression
+                    .replace(/×/g, '*')
+                    .replace(/÷/g, '/');
+                
+                // Basic validation for consecutive operators
+                if (/[+\-*/]{2,}/.test(expression)) {
+                    throw new Error('Invalid operator sequence');
+                }
+                
+                // Check for division by zero
+                if (/\/0(?!\.)/.test(expression)) {
+                    throw new Error('Division by zero');
+                }
+                
+                // Use Function constructor as a safer alternative to eval
+                // Still not perfect, but better than direct eval
+                try {
+                    return Function('"use strict"; return (' + expression + ')')();
+                } catch (error) {
+                    throw new Error('Invalid expression');
+                }
+            }
+            
+            function handleInput() {
+                const td = this;
+                // Clear all - reset display and font size
                 if(td.textContent === 'AC') {
                     display.textContent = '';
                     display.className = 'mr-4 size-15 text-6xl';
                     return;
-                }// jesli kliknieto znak 'C' to usuwam ostatni znak z display
+                }
+                // Clear last character
                 else if(td.textContent === 'C') {
                     display.textContent = display.textContent.slice(0, -1);
-                }/* jesli kliknieto znak '=' to wyswietlam wynik wyswietlonego na
-                  display dzialania ale zamieniam x na '*' i ÷ na '/' aby pasowalo do wyazeni js */
+                }
+                // Calculate result
                 else if(td.textContent === '=') {
-                    try     {
-                        let expression = display.textContent
-                            .replace(/×/g, '*')
-                            .replace(/÷/g, '/');
+                    try {
+                        if (display.textContent.trim() === '') {
+                            return; // Don't calculate empty expression
+                        }
                         
-                        let result = eval(expression);
-                        display.textContent = result.toString();
+                        let result = safeCalculate(display.textContent);
+                        
+                        // Format result to avoid floating point issues
+                        if (Number.isInteger(result)) {
+                            display.textContent = result.toString();
+                        } else {
+                            display.textContent = Number(result.toFixed(10)).toString();
+                        }
                     } catch (error) {
                         display.textContent = 'Error';
+                        console.error('Calculation error:', error.message);
                     }
                 }
-                //dodawanie tekstu do display
-                else{
-                display.textContent += td.textContent;
+                // Add clicked content to display
+                else {
+                    // Prevent multiple consecutive operators
+                    const lastChar = display.textContent.slice(-1);
+                    const currentChar = td.textContent;
+                    
+                    if (['+', '-', '×', '÷'].includes(lastChar) && ['+', '-', '×', '÷'].includes(currentChar)) {
+                        // Replace last operator with new one
+                        display.textContent = display.textContent.slice(0, -1) + currentChar;
+                    } else {
+                        display.textContent += currentChar;
+                    }
                 }
 
-                // zmniejsanie rozmiaru czcionki w zalezności od długości tekstu
-                
-                if (display.textContent.length > 15) {
+                // Dynamic font sizing based on content length
+                const length = display.textContent.length;
+                if (length > 15) {
                     display.className = 'mr-4 size-15 text-2xl';
-                } else if (display.textContent.length > 12) {
+                } else if (length > 12) {
                     display.className = 'mr-4 size-15 text-3xl';
-                }
-                else if (display.textContent.length > 10) {
+                } else if (length > 10) {
                     display.className = 'mr-4 size-15 text-4xl';
-                }
-                else if (display.textContent.length > 8) {
+                } else if (length > 8) {
                     display.className = 'mr-4 size-15 text-4xl';
-                } else if (display.textContent.length > 5) {
+                } else if (length > 5) {
                     display.className = 'mr-4 size-15 text-5xl';
                 } else {
                     display.className = 'mr-4 size-15 text-6xl';
+                }
+            }
+            
+            document.querySelectorAll('td').forEach(td => {
+                td.addEventListener('click', handleInput);
+                // Add tabindex for keyboard navigation
+                if (td.textContent.trim() !== '') {
+                    td.setAttribute('tabindex', '0');
+                    td.setAttribute('role', 'button');
+                    td.setAttribute('aria-label', `Calculator button ${td.textContent}`);
+                }
+            });
+            
+            // Add keyboard support
+            document.addEventListener('keydown', (e) => {
+                e.preventDefault();
+                
+                const key = e.key;
+                let buttonContent = '';
+                
+                if (key >= '0' && key <= '9') {
+                    buttonContent = key;
+                } else if (key === '+') {
+                    buttonContent = '+';
+                } else if (key === '-') {
+                    buttonContent = '-';
+                } else if (key === '*') {
+                    buttonContent = '×';
+                } else if (key === '/') {
+                    buttonContent = '÷';
+                } else if (key === '.') {
+                    buttonContent = '.';
+                } else if (key === 'Enter' || key === '=') {
+                    buttonContent = '=';
+                } else if (key === 'Escape') {
+                    buttonContent = 'AC';
+                } else if (key === 'Backspace') {
+                    buttonContent = 'C';
+                }
+                
+                if (buttonContent) {
+                    // Find the corresponding button and trigger click
+                    const button = Array.from(document.querySelectorAll('td')).find(td => 
+                        td.textContent === buttonContent
+                    );
+                    if (button) {
+                        button.focus();
+                        handleInput.call(button);
+                    }
                 }
             });
         });
