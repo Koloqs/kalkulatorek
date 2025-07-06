@@ -1,0 +1,33 @@
+{
+  "name": "kalkulatorek",
+  "version": "1.0.0",
+  "description": "A modern web calculator application built with HTML, CSS (Tailwind), and JavaScript",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000 --directory .",
+    "build": "npx tailwindcss -i ./input.css -o ./output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Koloqs/kalkulatorek.git"
+  },
+  "keywords": [
+    "calculator",
+    "web",
+    "javascript",
+    "html",
+    "css",
+    "tailwind",
+    "math"
+  ],
+  "author": "Koloqs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Koloqs/kalkulatorek/issues"
+  },
+  "homepage": "https://github.com/Koloqs/kalkulatorek#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.0.0"
+  }
+}
